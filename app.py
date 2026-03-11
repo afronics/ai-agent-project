@@ -5,8 +5,8 @@ import os
 
 app = FastAPI()
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 class Prompt(BaseModel):
     message: str
@@ -17,18 +17,18 @@ def root():
 
 @app.post("/ask")
 async def ask_ai(prompt: Prompt):
-    if not GROQ_API_KEY:
-        raise HTTPException(status_code=500, detail="GROQ_API_KEY not set")
+    if not OPENROUTER_API_KEY:
+        raise HTTPException(status_code=500, detail="OPENROUTER_API_KEY not set")
     
     try:
         response = requests.post(
-            GROQ_URL,
+            OPENROUTER_URL,
             headers={
-                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
                 "Content-Type": "application/json"
             },
             json={
-                "model": "llama3-8b-8192",
+                "model": "meta-llama/llama-3-8b-instruct:free",
                 "messages": [{"role": "user", "content": prompt.message}]
             },
             timeout=30
