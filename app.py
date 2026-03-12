@@ -25,7 +25,9 @@ async def ask_ai(prompt: Prompt):
             OPENROUTER_URL,
             headers={
                 "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://ai-agent-project-kydc.onrender.com",
+                "X-Title": "AI Agent"
             },
             json={
                 "model": "meta-llama/llama-3-8b-instruct:free",
