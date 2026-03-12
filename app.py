@@ -27,10 +27,10 @@ async def ask_ai(prompt: Prompt):
                 "Authorization": f"Bearer {GROQ_API_KEY}",
                 "Content-Type": "application/json"
             },
-            json={
-                "model": "llama3-8b-8192",
-                "messages": [{"role": "user", "content": prompt.message}]
-            },
+          json={
+    "model": "llama3-8b-8192",
+    "messages": [{"role": "user", "content": prompt.message}]
+},
             timeout=30
         )
         response.raise_for_status()
