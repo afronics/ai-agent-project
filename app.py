@@ -35,7 +35,19 @@ async def ask_ai(prompt: Prompt):
         response.raise_for_status()
         result = response.json()
         return {"response": result["choices"][0]["message"]["content"]}
-    except requests.exceptions.HTTPError as e:
-    raise HTTPException(status_code=500, detail=f"{str(e)} - {e.response.text}")
-except Exception as e:
-    raise HTTPException(status_code=500, detail=str(e))
+    try:
+        response = requests.post(
+            GROQ_URL,
+            headers={
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "llama3-8b-8192",
+                "messages": [{"role": "user", "content": prompt.message}]
+            },
+            timeout=30
+        )
+        return {"response": response.text, "status": response.status_code}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
