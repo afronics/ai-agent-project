@@ -35,5 +35,7 @@ async def ask_ai(prompt: Prompt):
         response.raise_for_status()
         result = response.json()
         return {"response": result["choices"][0]["message"]["content"]}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    except requests.exceptions.HTTPError as e:
+    raise HTTPException(status_code=500, detail=f"{str(e)} - {e.response.text}")
+except Exception as e:
+    raise HTTPException(status_code=500, detail=str(e))
