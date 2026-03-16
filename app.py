@@ -19,7 +19,6 @@ def root():
 async def ask_ai(prompt: Prompt):
     if not GROQ_API_KEY:
         raise HTTPException(status_code=500, detail="GROQ_API_KEY not set")
-    
     try:
         response = requests.post(
             GROQ_URL,
@@ -27,7 +26,7 @@ async def ask_ai(prompt: Prompt):
                 "Authorization": f"Bearer {GROQ_API_KEY}",
                 "Content-Type": "application/json"
             },
-    json={
+            json={
                 "model": "llama3-8b-8192",
                 "messages": [{"role": "user", "content": prompt.message}]
             },
@@ -36,6 +35,5 @@ async def ask_ai(prompt: Prompt):
         response.raise_for_status()
         result = response.json()
         return {"response": result["choices"][0]["message"]["content"]}
-    
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
