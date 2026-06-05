@@ -189,3 +189,14 @@ async def process_lead(lead: LeadData):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+@app.get("/debug-groq")
+def debug_groq():
+    import requests, os
+    key = os.environ.get("GROQ_API_KEY", "NOT SET")
+    headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+    payload = {"model": "llama-3.3-70b-versatile", "messages": [{"role": "user", "content": "hi"}], "max_tokens": 5}
+    try:
+        res = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload, timeout=10)
+        return {"status": res.status_code, "key_prefix": key[:12], "response": res.json()}
+    except Exception as e:
+        return {"error": str(e)}
