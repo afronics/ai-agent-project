@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Test Form</h2>
+    <form id="testForm">
+        <input type="text" name="message" placeholder="Type something">
+        <button type="submit">Send</button>
+    </form>
+    <pre id="result"></pre>
+
+    <script>
+        const form = document.getElementById('testForm');
+        const result = document.getElementById('result');
+        
+        // Use the PRODUCTION URL (without -test)
+        const webhookurl = 'https://test-support.app.n8n.cloud/webhook/support';
+        
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const data = { message: e.target.message.value };
+            
+            result.textContent = 'Sending...';
+            
+            try {
+                const res = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                result.textContent = `Status: ${res.status} ${res.statusText}`;
+            } catch (err) {
+                result.textContent = `Error: ${err.message}`;
+            }
+        };
+    </script>
+</body>
+</html>  
